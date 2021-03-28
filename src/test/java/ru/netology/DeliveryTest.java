@@ -22,7 +22,7 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
-    private WebDriver driver;
+//    private WebDriver driver;
 
     public String deliveryDate() {
         Calendar currentDate = Calendar.getInstance();
@@ -36,24 +36,24 @@ public class DeliveryTest {
         WebDriverManager.chromedriver().setup();
     }
 
-    @BeforeEach
-    public void setUpTest() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.addArguments("disable-infobars");
-        options.addArguments("--headless");
-        options.addArguments("--disable-extensions");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--no-sandbox");
-        driver = new ChromeDriver(options);
-    }
-
-    @AfterEach
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+//    @BeforeEach
+//    public void setUpTest() {
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("start-maximized");
+//        options.addArguments("disable-infobars");
+//        options.addArguments("--headless");
+//        options.addArguments("--disable-extensions");
+//        options.addArguments("--disable-dev-shm-usage");
+//        options.addArguments("--no-sandbox");
+//        driver = new ChromeDriver(options);
+//    }
+//
+//    @AfterEach
+//    public void teardown() {
+//        if (driver != null) {
+//            driver.quit();
+//        }
+//    }
 
     @Test
     void shouldAcceptTest() {
