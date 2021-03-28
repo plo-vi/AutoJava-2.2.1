@@ -10,8 +10,7 @@ branches:
 build: off
 
 install:
-  - java -jar ./artifacts/app-mbank.jar &
+  - java -jar ./artifacts/app-card-delivery.jar &
 
 build_script:
-  - chmod +x gradlew
-  - ./gradlew test --info
+  - ./gradlew test -Dselenide.headless=true --info
