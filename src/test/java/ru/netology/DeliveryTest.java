@@ -2,9 +2,14 @@ package ru.netology;
 
 import com.codeborne.selenide.Condition;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,6 +22,8 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
+    private WebDriver driver;
+
     public String deliveryDate() {
         Calendar currentDate = Calendar.getInstance();
         currentDate.add(Calendar.DATE, 3);
@@ -27,6 +34,20 @@ public class DeliveryTest {
     @BeforeAll
     static void setUpAll() {
         WebDriverManager.chromedriver().setup();
+    }
+
+    @BeforeEach
+    public void setUpTest() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
+    }
+
+    @AfterEach
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @Test
