@@ -1,6 +1,7 @@
 package ru.netology;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,8 +37,8 @@ public class DeliveryTest {
         WebDriverManager.chromedriver().setup();
     }
 
-//    @BeforeEach
-//    public void setUpTest() {
+    @BeforeEach
+    public void setUpTest() {
 //        ChromeOptions options = new ChromeOptions();
 //        options.addArguments("start-maximized");
 //        options.addArguments("disable-infobars");
@@ -46,7 +47,8 @@ public class DeliveryTest {
 //        options.addArguments("--disable-dev-shm-usage");
 //        options.addArguments("--no-sandbox");
 //        driver = new ChromeDriver(options);
-//    }
+        Configuration.baseUrl="http://localhost:9999";
+    }
 //
 //    @AfterEach
 //    public void teardown() {
