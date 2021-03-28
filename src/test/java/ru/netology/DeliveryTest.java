@@ -1,6 +1,8 @@
 package ru.netology;
 
 import com.codeborne.selenide.Condition;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
@@ -20,6 +22,11 @@ public class DeliveryTest {
         currentDate.add(Calendar.DATE, 3);
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return dateFormat.format(currentDate.getTime());
+    }
+
+    @BeforeAll
+    static void setUpAll() {
+        WebDriverManager.chromedriver().setup();
     }
 
     @Test
