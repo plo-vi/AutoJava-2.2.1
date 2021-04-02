@@ -17,13 +17,10 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Calendar;
 
-import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
-
-//    private WebDriver driver;
 
     public String deliveryDate() {
         Calendar currentDate = Calendar.getInstance();
@@ -39,27 +36,11 @@ public class DeliveryTest {
 
     @BeforeEach
     public void setUpTest() {
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("start-maximized");
-//        options.addArguments("disable-infobars");
-//        options.addArguments("--headless");
-//        options.addArguments("--disable-extensions");
-//        options.addArguments("--disable-dev-shm-usage");
-//        options.addArguments("--no-sandbox");
-//        driver = new ChromeDriver(options);
-        Configuration.baseUrl="http://localhost:9999";
+        open("http://localhost:9999");
     }
-//
-//    @AfterEach
-//    public void teardown() {
-//        if (driver != null) {
-//            driver.quit();
-//        }
-//    }
 
     @Test
     void shouldAcceptTest() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Москва");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
         $("[placeholder='Дата встречи']").setValue(deliveryDate());
@@ -74,7 +55,6 @@ public class DeliveryTest {
 
     @Test
     void shouldNotAcceptForeignCityTest() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Рим");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
         $("[placeholder='Дата встречи']").setValue(deliveryDate());
@@ -82,12 +62,11 @@ public class DeliveryTest {
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
         $$("button").find(Condition.exactText("Забронировать")).click();
-        $("div:nth-child(1) > div > span > span > span.input__sub").shouldHave(exactText("Доставка в выбранный город недоступна"));
+        $(byText("Доставка в выбранный город недоступна")).shouldBe(Condition.visible, Duration.ofMillis(15000));
     }
 
     @Test
     void shouldNotAcceptCityInEnglishTest() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Moscow");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
         $("[placeholder='Дата встречи']").setValue(deliveryDate());
@@ -95,12 +74,11 @@ public class DeliveryTest {
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
         $$("button").find(Condition.exactText("Забронировать")).click();
-        $("div:nth-child(1) span.input__sub").shouldHave(exactText("Доставка в выбранный город недоступна"));
+        $(byText("Доставка в выбранный город недоступна")).shouldBe(Condition.visible, Duration.ofMillis(15000));
     }
 
     @Test
     void shouldNotAcceptWrongDateTest() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Москва");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
         $("[placeholder='Дата встречи']").setValue("20.03.2020");
@@ -108,12 +86,11 @@ public class DeliveryTest {
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
         $$("button").find(Condition.exactText("Забронировать")).click();
-        $("div:nth-child(2) > span > span > span > span > span.input__sub").shouldHave(exactText("Заказ на выбранную дату невозможен"));
+        $(byText("Заказ на выбранную дату невозможен")).shouldBe(Condition.visible, Duration.ofMillis(15000));
     }
 
     @Test
     void shouldNotAcceptNameInEnglishTest() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Москва");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
         $("[placeholder='Дата встречи']").setValue(deliveryDate());
@@ -121,12 +98,11 @@ public class DeliveryTest {
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
         $$("button").find(Condition.exactText("Забронировать")).click();
-        $("div:nth-child(3) > span > span > span.input__sub").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        $(byText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.")).shouldBe(Condition.visible, Duration.ofMillis(15000));
     }
 
     @Test
     void shouldNotAcceptWrongPhoneTest() {
-        open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Москва");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
         $("[placeholder='Дата встречи']").setValue(deliveryDate());
@@ -134,6 +110,6 @@ public class DeliveryTest {
         $("[name='phone']").setValue("77777777777");
         $(".checkbox__box").click();
         $$("button").find(Condition.exactText("Забронировать")).click();
-        $("div:nth-child(4) > span > span > span.input__sub").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+        $(byText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.")).shouldBe(Condition.visible, Duration.ofMillis(15000));
     }
 }
