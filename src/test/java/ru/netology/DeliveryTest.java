@@ -23,7 +23,7 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
-//    private WebDriver driver;
+    private WebDriver driver;
 
     public String deliveryDate() {
         Calendar currentDate = Calendar.getInstance();
@@ -41,13 +41,13 @@ public class DeliveryTest {
     public void setUpTest() {
         open("http://localhost:9999");
     }
-//
-//    @AfterEach
-//    public void teardown() {
-//        if (driver != null) {
-//            driver.quit();
-//        }
-//    }
+
+    @AfterEach
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
 
     @Test
     void shouldAcceptTest() {
