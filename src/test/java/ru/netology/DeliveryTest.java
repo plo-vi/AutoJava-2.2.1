@@ -1,64 +1,61 @@
 package ru.netology;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.cssValue;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
-    private WebDriver driver;
-
-    public String deliveryDate() {
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.add(Calendar.DATE, 3);
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        return dateFormat.format(currentDate.getTime());
-    }
-
-    @BeforeAll
-    static void setUpAll() {
-        WebDriverManager.chromedriver().setup();
-    }
+    LocalDate date = LocalDate.now().plusDays(3);
 
     @BeforeEach
     public void setUpTest() {
         open("http://localhost:9999");
     }
 
-    @AfterEach
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-
     @Test
-    void shouldAcceptTest() {
+    void shouldShowSuccessTest() {
         $("[placeholder='Город']").setValue("Москва");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
-        $("[placeholder='Дата встречи']").setValue(deliveryDate());
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         $("[name='name']").setValue("Иванов-Петров Иван");
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
         $$("button").find(Condition.exactText("Забронировать")).click();
         $(byText("Успешно!")).shouldBe(Condition.visible, Duration.ofMillis(15000));
+    }
+
+    @Test
+    void shouldShowMeetingInfoTest() {
+        $("[placeholder='Город']").setValue("Москва");
+        $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        $("[name='name']").setValue("Иванов-Петров Иван");
+        $("[name='phone']").setValue("+77777777777");
+        $(".checkbox__box").click();
+        $$("button").find(Condition.exactText("Забронировать")).click();
+        $(byText("Встреча успешно забронирована на ")).shouldBe(Condition.visible, Duration.ofMillis(15000));
+    }
+
+    @Test
+    void shouldShowMeetingDateInfoTest() {
+        $("[placeholder='Город']").setValue("Москва");
+        $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        $("[name='name']").setValue("Иванов-Петров Иван");
+        $("[name='phone']").setValue("+77777777777");
+        $(".checkbox__box").click();
+        $$("button").find(Condition.exactText("Забронировать")).click();
+        $("div.notification__content").equals(date);
     }
 
     // negative tests
@@ -67,7 +64,7 @@ public class DeliveryTest {
     void shouldNotAcceptForeignCityTest() {
         $("[placeholder='Город']").setValue("Рим");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
-        $("[placeholder='Дата встречи']").setValue(deliveryDate());
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         $("[name='name']").setValue("Иванов-Петров Иван");
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
@@ -79,7 +76,7 @@ public class DeliveryTest {
     void shouldNotAcceptCityInEnglishTest() {
         $("[placeholder='Город']").setValue("Moscow");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
-        $("[placeholder='Дата встречи']").setValue(deliveryDate());
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         $("[name='name']").setValue("Иванов-Петров Иван");
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
@@ -103,7 +100,7 @@ public class DeliveryTest {
     void shouldNotAcceptNameInEnglishTest() {
         $("[placeholder='Город']").setValue("Москва");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
-        $("[placeholder='Дата встречи']").setValue(deliveryDate());
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         $("[name='name']").setValue("Ivanov Иван");
         $("[name='phone']").setValue("+77777777777");
         $(".checkbox__box").click();
@@ -115,11 +112,22 @@ public class DeliveryTest {
     void shouldNotAcceptWrongPhoneTest() {
         $("[placeholder='Город']").setValue("Москва");
         $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
-        $("[placeholder='Дата встречи']").setValue(deliveryDate());
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         $("[name='name']").setValue("Иванов-Петров Иван");
         $("[name='phone']").setValue("77777777777");
         $(".checkbox__box").click();
         $$("button").find(Condition.exactText("Забронировать")).click();
         $(byText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.")).shouldBe(Condition.visible, Duration.ofMillis(15000));
+    }
+
+    @Test
+    void shouldNotAcceptWithNoAgreementTest() {
+        $("[placeholder='Город']").setValue("Москва");
+        $("[placeholder='Дата встречи']").sendKeys(Keys.chord(Keys.SHIFT, Keys.UP), Keys.DELETE);
+        $("[placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        $("[name='name']").setValue("Иванов-Петров Иван");
+        $("[name='phone']").setValue("+77777777777");
+        $$("button").find(Condition.exactText("Забронировать")).click();
+        $(".input_invalid").shouldHave(cssValue("color", "rgba(255, 92, 92, 1)"));
     }
 }
